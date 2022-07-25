@@ -40,9 +40,7 @@ public class MyblogController {
 
     @GetMapping("/api/posts")
     public List<Myblog> getposts() {
-
         return myblogRepository.findAll();
-
     }
 
     @PutMapping("api/posts/{id}")
