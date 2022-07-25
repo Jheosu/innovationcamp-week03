@@ -1,6 +1,7 @@
 package com.innovation.myblog.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ public class Myblog extends TimeStamped{
     @Column(nullable = false)
     private String author;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
