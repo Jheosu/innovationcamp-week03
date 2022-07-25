@@ -5,11 +5,11 @@ import com.innovation.myblog.models.Myblog;
 import com.innovation.myblog.models.MyblogDto;
 import com.innovation.myblog.models.MyblogRepository;
 import com.innovation.myblog.service.MyblogService;
-import jdk.nashorn.internal.parser.JSONParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +42,15 @@ public class MyblogController {
     @GetMapping("/api/posts")
     public List<Myblog> getposts() {
         return myblogRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    @GetMapping("/api/posts/{id}")
+    public Myblog getpost(@PathVariable Long id) {
+        Myblog myblog = myblogRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 id가 없습니다")
+        );
+
+        return myblog;
     }
 
     @PutMapping("api/posts/{id}")
