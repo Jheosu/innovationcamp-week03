@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@RestController  // @Bean
 @RequiredArgsConstructor
 public class MyblogController {
 
@@ -25,18 +25,16 @@ public class MyblogController {
     }
 
     @PostMapping("/api/posts/{id}")
-    public String checkpassword(@PathVariable Long id,@RequestBody MyblogDto requestDto) {
+    public Long checkpassword(@PathVariable Long id, @RequestBody MyblogDto requestDto) {
         String password = requestDto.getPassword();
-        Myblog myblog = myblogRepository.findByIdAndPassword(id,password);
+        Myblog myblog = myblogRepository.findByIdAndPassword(id, password);
 
         if (myblog != null) {
-            return "비밀번호가 맞습니다";
-        }
-        else {
-            return "비밀번호가 틀립니다";
+            return id;
+        } else {
+            return -1l;
         }
     }
-
 
 
     @GetMapping("/api/posts")
@@ -54,23 +52,23 @@ public class MyblogController {
     }
 
     @PutMapping("api/posts/{id}")
-    public Long putPosts(@PathVariable Long id,@RequestBody MyblogDto requestDto) {
-        return myblogService.update(id, requestDto);
+    public Long putPosts(@PathVariable Long id, @RequestBody MyblogDto requestDto) {
+
+        myblogService.update(id, requestDto);
+        return id;
     }
 
     @DeleteMapping("api/posts/{id}")
-    public String deletePosts(@PathVariable Long id,@RequestBody MyblogDto requsetDto) {
+    public Long deletePosts(@PathVariable Long id, @RequestBody MyblogDto requsetDto) {
         String password = requsetDto.getPassword();
 
-        Myblog myblog = myblogRepository.findByIdAndPassword(id,password);
+        Myblog myblog = myblogRepository.findByIdAndPassword(id, password);
 
         if (myblog != null) {
             myblogRepository.deleteById(id);
-            return "게시글이 삭제 되었습니다";
-        }
-
-        else {
-            return "비밀번호가 틀립니다";
+            return id;
+        } else {
+            return -1l;
         }
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
-@Service
+@Service  //@Bean
 public class MyblogService {
 
     private final MyblogRepository myblogRepository;
