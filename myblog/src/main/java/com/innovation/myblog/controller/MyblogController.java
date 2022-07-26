@@ -28,7 +28,6 @@ public class MyblogController {
     public Long checkpassword(@PathVariable Long id, @RequestBody MyblogDto requestDto) {
         String password = requestDto.getPassword();
         Myblog myblog = myblogRepository.findByIdAndPassword(id, password);
-
         if (myblog != null) {
             return id;
         } else {
@@ -47,16 +46,15 @@ public class MyblogController {
         Myblog myblog = myblogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 id가 없습니다")
         );
-
         return myblog;
     }
 
     @PutMapping("api/posts/{id}")
     public Long putPosts(@PathVariable Long id, @RequestBody MyblogDto requestDto) {
 
-        myblogService.update(id, requestDto);
-        return id;
+        return myblogService.update(id, requestDto);
     }
+
 
     @DeleteMapping("api/posts/{id}")
     public Long deletePosts(@PathVariable Long id, @RequestBody MyblogDto requsetDto) {
@@ -71,4 +69,6 @@ public class MyblogController {
             return -1l;
         }
     }
+
+
 }

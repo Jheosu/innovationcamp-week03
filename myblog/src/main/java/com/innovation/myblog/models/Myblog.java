@@ -25,7 +25,7 @@ public class Myblog extends TimeStamped{
     @Column(nullable = false)
     private String author;
 
-    @JsonIgnore // 비밀번호는 response에 안보이게 하기위함.
+    @JsonIgnore // 비밀번호는 response에 안보이게 하기 위함.
     @Column(nullable = false)
     private String password;
 

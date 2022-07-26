@@ -18,7 +18,6 @@ public class MyblogService {
 
     @Transactional
     public Long update(Long id, MyblogDto requestDto) {
-
         String password = requestDto.getPassword();
 
         Myblog myblog = myblogRepository.findByIdAndPassword(id,password);
@@ -26,8 +25,10 @@ public class MyblogService {
         myblog.update(requestDto);
 
         return id;
-
     }
+
+
+
 
 
 }
