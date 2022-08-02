@@ -2,6 +2,7 @@ package com.innovation.myblog.service;
 
 
 import com.innovation.myblog.dto.CommentDto;
+import com.innovation.myblog.dto.ResponseDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import com.innovation.myblog.models.Comment;
 import com.innovation.myblog.models.Myblog;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service  //@Bean
@@ -25,8 +25,9 @@ public class MyblogService {
     private final MemberService memberService;
 
 
-    public List<Myblog> findall() {
-        return myblogRepository.findAllByOrderByCreatedAtDesc();
+    public ResponseDto findall() {
+
+        return new ResponseDto(myblogRepository.findAllByOrderByCreatedAtDesc(),commentRepository.findAll());
     }
 
 
@@ -76,6 +77,11 @@ public class MyblogService {
     public Long createcomment(CommentDto requestDto) {
         requestDto.setAuthor(getAuthor());
         Long id = requestDto.getPostid();
+
+        if(myblogRepository.findById(id) == null) {
+            throw new RuntimeException("해당 게시물 없음");
+        }
+
         Comment comment = new Comment(requestDto);
         commentRepository.save(comment);
 
@@ -110,6 +116,7 @@ public class MyblogService {
         return comment;
     }
 
+    //현재 접근하는 token의 유저name 반환
     private String getAuthor() {
         return memberService.getMyInfo().getNickname();
     }

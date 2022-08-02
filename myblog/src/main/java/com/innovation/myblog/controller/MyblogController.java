@@ -2,6 +2,7 @@ package com.innovation.myblog.controller;
 
 
 import com.innovation.myblog.dto.CommentDto;
+import com.innovation.myblog.dto.ResponseDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import com.innovation.myblog.models.Comment;
 import com.innovation.myblog.models.Myblog;
@@ -11,6 +12,7 @@ import com.innovation.myblog.service.MyblogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.util.List;
 
 @RestController  // @Bean
@@ -24,7 +26,7 @@ public class MyblogController {
 
 
     @GetMapping("") // 전체 조회
-    public List<Myblog> getposts() {
+    public ResponseDto getposts() {
         return myblogService.findall();
     }
 
