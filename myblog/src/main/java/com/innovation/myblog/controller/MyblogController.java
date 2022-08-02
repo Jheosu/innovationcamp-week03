@@ -1,15 +1,15 @@
 package com.innovation.myblog.controller;
 
 
+import com.innovation.myblog.dto.ExcludepwMyblogDto;
 import com.innovation.myblog.models.Myblog;
-import com.innovation.myblog.models.MyblogDto;
-import com.innovation.myblog.models.MyblogRepository;
+import com.innovation.myblog.dto.MyblogDto;
+import com.innovation.myblog.repository.MyblogRepository;
 import com.innovation.myblog.service.MyblogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController  // @Bean
 @RequiredArgsConstructor
@@ -24,21 +24,10 @@ public class MyblogController {
         return myblogRepository.save(myblog);
     }
 
-    @PostMapping("/api/posts/{id}")
-    public Long checkpassword(@PathVariable Long id, @RequestBody MyblogDto requestDto) {
-        String password = requestDto.getPassword();
-        Myblog myblog = myblogRepository.findByIdAndPassword(id, password);
-        if (myblog != null) {
-            return id;
-        } else {
-            return -1l;
-        }
-    }
-
 
     @GetMapping("/api/posts")
-    public List<Myblog> getposts() {
-        return myblogRepository.findAllByOrderByCreatedAtDesc();
+    public List<ExcludepwMyblogDto> getposts() {
+        return myblogRepository.test();
     }
 
     @GetMapping("/api/posts/{id}")

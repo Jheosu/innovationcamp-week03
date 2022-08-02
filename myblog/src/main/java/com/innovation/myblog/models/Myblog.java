@@ -2,6 +2,7 @@ package com.innovation.myblog.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.innovation.myblog.dto.MyblogDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,7 +41,6 @@ public class Myblog extends TimeStamped{
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.author = requestDto.getAuthor();
-        this.password = requestDto.getPassword();
     }
 
 

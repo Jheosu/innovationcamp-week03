@@ -2,8 +2,8 @@ package com.innovation.myblog.service;
 
 
 import com.innovation.myblog.models.Myblog;
-import com.innovation.myblog.models.MyblogDto;
-import com.innovation.myblog.models.MyblogRepository;
+import com.innovation.myblog.dto.MyblogDto;
+import com.innovation.myblog.repository.MyblogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

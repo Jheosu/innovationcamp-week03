@@ -1,4 +1,4 @@
-package com.innovation.myblog.models;
+package com.innovation.myblog.dto;
 
 
 import lombok.Getter;
@@ -15,8 +15,5 @@ public class MyblogDto {
     private final String content;
 
     private final String author;
-
-    private final String password;
-
 
 }
