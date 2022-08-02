@@ -1,7 +1,9 @@
 package com.innovation.myblog.controller;
 
 
-import com.innovation.myblog.dto.ExcludepwMyblogDto;
+import com.innovation.myblog.dto.CommentDto;
+import com.innovation.myblog.dto.UpdateMyblogDto;
+import com.innovation.myblog.models.Comment;
 import com.innovation.myblog.models.Myblog;
 import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.repository.MyblogRepository;
@@ -13,51 +15,34 @@ import java.util.List;
 
 @RestController  // @Bean
 @RequiredArgsConstructor
+@RequestMapping("/api/posts")
 public class MyblogController {
 
     private final MyblogRepository myblogRepository;
     private final MyblogService myblogService;
 
-    @PostMapping("/api/posts")
-    public Myblog createPost(@RequestBody MyblogDto requestDto) {
-        Myblog myblog = new Myblog(requestDto);
-        return myblogRepository.save(myblog);
+
+
+    @GetMapping("") // 전체 조회
+    public List<Myblog> getposts() {
+        return myblogService.findall();
     }
 
-
-    @GetMapping("/api/posts")
-    public List<ExcludepwMyblogDto> getposts() {
-        return myblogRepository.test();
-    }
-
-    @GetMapping("/api/posts/{id}")
+    @GetMapping("/{id}") // 특정 게시물 조회
     public Myblog getpost(@PathVariable Long id) {
-        Myblog myblog = myblogRepository.findById(id).orElseThrow(
+        return myblogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 id가 없습니다")
         );
-        return myblog;
     }
 
-    @PutMapping("api/posts/{id}")
-    public Long putPosts(@PathVariable Long id, @RequestBody MyblogDto requestDto) {
-
-        return myblogService.update(id, requestDto);
+    @GetMapping("/comment") // 댓글 조회
+    public List<Comment> getcomment() {
+        return myblogService.getcomments();
     }
 
-
-    @DeleteMapping("api/posts/{id}")
-    public Long deletePosts(@PathVariable Long id, @RequestBody MyblogDto requsetDto) {
-        String password = requsetDto.getPassword();
-
-        Myblog myblog = myblogRepository.findByIdAndPassword(id, password);
-
-        if (myblog != null) {
-            myblogRepository.deleteById(id);
-            return id;
-        } else {
-            return -1l;
-        }
+    @GetMapping("/comment/{id}") // 특정 게시물 댓글 조회
+    public List<Comment> getidcomments(@PathVariable Long id) {
+        return myblogService.getidcomments(id);
     }
-
 
 }

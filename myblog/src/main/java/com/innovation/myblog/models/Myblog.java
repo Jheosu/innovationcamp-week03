@@ -1,8 +1,8 @@
 package com.innovation.myblog.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.innovation.myblog.dto.MyblogDto;
+import com.innovation.myblog.dto.UpdateMyblogDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,16 +26,12 @@ public class Myblog extends TimeStamped{
     @Column(nullable = false)
     private String author;
 
-    @JsonIgnore // 비밀번호는 response에 안보이게 하기 위함.
-    @Column(nullable = false)
-    private String password;
 
-    public void update (MyblogDto requestDto) {
+
+    public void update (UpdateMyblogDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.author = requestDto.getAuthor();
     }
-
 
     public Myblog(MyblogDto requestDto) {
         this.title = requestDto.getTitle();

@@ -1,6 +1,5 @@
 package com.innovation.myblog.dto;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -8,13 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class MyblogDto {
+public class UpdateMyblogDto {
 
     private final String title;
 
     private final String content;
-
-    private String author;
-
-
 }
