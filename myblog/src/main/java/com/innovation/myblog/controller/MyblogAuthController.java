@@ -4,10 +4,13 @@ package com.innovation.myblog.controller;
 import com.innovation.myblog.dto.CommentDto;
 import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
+import com.innovation.myblog.exception.RestApiException;
 import com.innovation.myblog.models.Comment;
 import com.innovation.myblog.models.Myblog;
 import com.innovation.myblog.service.MyblogService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,11 +45,26 @@ public class MyblogAuthController {
     @PutMapping("/comment/{id}") //댓글 수정
     public Comment updatecomments(@RequestBody CommentDto requstDto, @PathVariable Long id){
         return myblogService.updatecomment(requstDto,id);
+
+
     }
 
     @DeleteMapping("/comment/{id}") //댓글 삭제
     public Long deletecomment(@PathVariable Long id){
         return myblogService.deletecomment(id);
+    }
+
+    @ExceptionHandler({ IllegalArgumentException.class })
+    public ResponseEntity handleException(IllegalArgumentException ex) {
+        RestApiException restApiException = new RestApiException();
+        restApiException.setHttpStatus(HttpStatus.UNAUTHORIZED);
+        restApiException.setErrorMessage(ex.getMessage());
+        return new ResponseEntity(
+                // HTTP body
+                restApiException,
+                // HTTP status code
+                HttpStatus.UNAUTHORIZED
+        );
     }
 
 }

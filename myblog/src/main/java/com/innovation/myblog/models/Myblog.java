@@ -10,10 +10,11 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
+@Table(name = "auth_myblog")
 @Entity
 public class Myblog extends TimeStamped{
 
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Id
     private Long id;
 

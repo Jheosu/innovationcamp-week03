@@ -10,15 +10,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "member")
 @Entity
-public class Member {
+public  class Member {
 
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 30, unique = true)
     private String nickname;
-
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)

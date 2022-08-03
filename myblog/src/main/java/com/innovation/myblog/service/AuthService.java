@@ -16,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 @Service
@@ -31,12 +33,12 @@ public class AuthService {
 
 
     @Transactional
-    public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+    public MemberResponseDto signup( MemberRequestDto memberRequestDto) {
         if (memberRepository.existsByNickname(memberRequestDto.getNickname())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new IllegalArgumentException("이미 가입되어 있는 유저입니다");
         }
         if(!Objects.equals(memberRequestDto.getPassword(), memberRequestDto.getChpassword())) {
-            throw new RuntimeException("비밀번호가 서로 다릅니다");
+            throw new IllegalArgumentException("비밀번호가 서로 다릅니다");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
@@ -56,7 +58,7 @@ public class AuthService {
     //Refresh Token 은 저장하고, 생성된 토큰 정보를 클라이언트에게 전달합니다.
 
     @Transactional
-    public TokenDto login(MemberRequestDto memberRequestDto) {
+    public TokenDto login( MemberRequestDto memberRequestDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
