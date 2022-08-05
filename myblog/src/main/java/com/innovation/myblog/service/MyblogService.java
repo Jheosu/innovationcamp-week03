@@ -10,7 +10,6 @@ import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.repository.CommentRepository;
 import com.innovation.myblog.repository.MyblogRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

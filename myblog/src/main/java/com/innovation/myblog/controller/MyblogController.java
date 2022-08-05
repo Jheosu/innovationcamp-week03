@@ -1,18 +1,14 @@
 package com.innovation.myblog.controller;
 
 
-import com.innovation.myblog.dto.CommentDto;
 import com.innovation.myblog.dto.ResponseDto;
-import com.innovation.myblog.dto.UpdateMyblogDto;
 import com.innovation.myblog.models.Comment;
 import com.innovation.myblog.models.Myblog;
-import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.repository.MyblogRepository;
 import com.innovation.myblog.service.MyblogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.util.List;
 
 @RestController  // @Bean
