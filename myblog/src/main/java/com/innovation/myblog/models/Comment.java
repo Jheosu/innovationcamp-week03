@@ -1,11 +1,19 @@
 package com.innovation.myblog.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.innovation.myblog.dto.CommentDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @NoArgsConstructor
 @Getter
@@ -27,6 +35,16 @@ public class Comment extends TimeStamped{
     @Column(nullable = false)
     private Long postid;
 
+    @JsonBackReference
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> childList = new ArrayList<>();
+
+
     public Comment(CommentDto commentDto) {
         this.author = commentDto.getAuthor();
         this.comment = commentDto.getComment();
@@ -34,5 +52,14 @@ public class Comment extends TimeStamped{
     }
     public void update(CommentDto commentDto) {
         this.comment = commentDto.getComment();
+    }
+
+    public void addChild(Comment child){
+        childList.add(child);
+    }
+
+    public void confirmParent(Comment parent){
+        this.parent = parent;
+        parent.addChild(this);
     }
 }

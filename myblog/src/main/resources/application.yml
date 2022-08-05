@@ -4,10 +4,19 @@ spring:
       enabled: true
 
   datasource:
-    username: admin
-    url: jdbc:mysql://springboot-database.cn3x5unw9erg.ap-northeast-2.rds.amazonaws.com:3306/myblog
-    password: qweasd8770!
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+      hibernate:
+        ddl-auto: create-drop
+      properties:
+        hibernate:
+          format_sql: true
+          show_sql: true
   jpa:
     hibernate:
       ddl-auto: update

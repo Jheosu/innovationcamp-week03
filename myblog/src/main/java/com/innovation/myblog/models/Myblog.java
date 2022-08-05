@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -26,6 +27,7 @@ public class Myblog extends TimeStamped{
 
     @Column(nullable = false)
     private String author;
+
 
 
 

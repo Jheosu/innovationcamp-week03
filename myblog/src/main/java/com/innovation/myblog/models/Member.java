@@ -31,9 +31,4 @@ public  class Member {
         this.password = password;
         this.authority = authority;
     }
-
-
-
-
-
 }

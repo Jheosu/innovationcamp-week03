@@ -55,6 +55,26 @@ public class MyblogAuthController {
     }
 
 
+    // ------------------대댓글--------------------
+
+    @PostMapping("/recomment")    //댓글 생성
+    public Long postrecomments(@RequestBody CommentDto requestDto) {
+        return myblogService.createrecomment(requestDto);
+    }
+
+    @PutMapping("/recomment/{id}") //댓글 수정
+    public Comment updaterecomments(@RequestBody CommentDto requstDto, @PathVariable Long id){
+        return myblogService.updatecomment(requstDto,id);
+
+
+    }
+
+    @DeleteMapping("/recomment/{id}") //댓글 삭제
+    public Long deleterecomment(@PathVariable Long id){
+        return myblogService.deletecomment(id);
+    }
+
+
     @ExceptionHandler({ IllegalArgumentException.class })
     public ResponseEntity handleException(IllegalArgumentException ex) {
         RestApiException restApiException = new RestApiException();
