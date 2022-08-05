@@ -39,6 +39,13 @@ dependencies {
     runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
+    //aws 의존성
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
+
+    //sdk for java 의존성 (s3 관리 툴)
+    implementation "software.amazon.awssdk:s3:2.13.0"
+
+
 }
 
 tasks.named('test') {
