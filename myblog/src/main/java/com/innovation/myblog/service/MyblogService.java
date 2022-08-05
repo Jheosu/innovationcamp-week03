@@ -67,11 +67,15 @@ public class MyblogService {
     public Long deletepost(Long id) {
 
         Myblog myblog = myblogRepository.findByAuthorAndId(getAuthor(), id);
+
         if (myblog == null) {
             throw new IllegalArgumentException("삭제하실 권한이 없습니다");
         }
 
+
         myblogRepository.deleteByAuthorAndId(getAuthor(), id);
+
+
         commentRepository.deleteByPostid(id);
 
         return id;
@@ -95,16 +99,26 @@ public class MyblogService {
 
     //모든 댓글 조회
     public List<Comment> getcomments() {
-        return commentRepository.findAllByOrderByCreatedAtDesc();
+        return commentRepository.findByParent(null);
+    }
+
+    public List<Comment> getrecomments() {
+        return commentRepository.findAllByParentIsNotNull();
     }
 
     public List<Comment> getidcomments(Long id) {
-        return commentRepository.findByPostid(id);
+        return commentRepository.findByPostidAndParent(id,null);
     }
 
+
+
+    @Transactional
     public Long deletecomment(Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 댓글이 없습니다"));
+
+        commentRepository.deleteAllByParent(comment);
+
         if (!Objects.equals(comment.getAuthor(), getAuthor())) {
             throw new IllegalArgumentException("삭제하실 권한이 없습니다");
         }
@@ -125,6 +139,8 @@ public class MyblogService {
     }
 
 
+
+
     @Transactional
     public Comment updatecomment(CommentDto requestDto, Long id) {
 
@@ -139,10 +155,17 @@ public class MyblogService {
         return comment;
     }
 
+    public Comment updaterecomment(CommentDto requstDto, Long id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("xx"));
+        comment.update(requstDto);
+        return comment;
+    }
     //현재 접근하는 token의 유저name 반환
     private String getAuthor() {
         return memberService.getMyInfo().getNickname();
     }
+
+
 
 }
 
