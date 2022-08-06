@@ -10,5 +10,6 @@ import lombok.Setter;
 public class UpdateMyblogDto {
     private final String title;
     private final String content;
+    private String ImageUrl;
     private final int commentCount;
 }

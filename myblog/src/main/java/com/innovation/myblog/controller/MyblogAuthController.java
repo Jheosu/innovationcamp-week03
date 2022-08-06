@@ -6,12 +6,13 @@ import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import com.innovation.myblog.exception.RestApiException;
 import com.innovation.myblog.models.Comment;
-import com.innovation.myblog.models.Myblog;
+import com.innovation.myblog.service.AwsService;
 import com.innovation.myblog.service.MyblogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,14 +21,20 @@ public class MyblogAuthController {
 
     private final MyblogService myblogService;
 
+    private final AwsService awsService;
+
     @PostMapping("/post") //생성
-    public Myblog createPost(@RequestBody MyblogDto requestDto) {
-        return myblogService.createPost(requestDto);
+    public void createPost(@RequestPart(value = "file", required = false) MultipartFile multipartFile,
+                           @RequestPart(value = "request") MyblogDto requestDto) {
+
+            myblogService.createPost(requestDto, multipartFile);
     }
 
     @PutMapping("/post/{id}") //수정
-    public Long putPosts(@PathVariable Long id, @RequestBody UpdateMyblogDto requestDto) {
-        return myblogService.update(id, requestDto);
+    public Long putPosts(@PathVariable Long id,
+                         @RequestPart("request") UpdateMyblogDto requestDto,
+                         @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+        return myblogService.update(id, requestDto, multipartFile);
     }
 
     @DeleteMapping("/post/{id}") //삭제

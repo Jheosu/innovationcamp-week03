@@ -26,6 +26,9 @@ public class Myblog extends TimeStamped {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String imageUrl;
+
     @Column(nullable = false)
     private String author;
 
@@ -57,6 +60,7 @@ public class Myblog extends TimeStamped {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.author = requestDto.getAuthor();
+        this.imageUrl = requestDto.getImageUrl();
         // nullable = false 이기 때문에 초기화
         this.commentCount = 0;
         this.commentIds = new LinkedHashSet<>();
