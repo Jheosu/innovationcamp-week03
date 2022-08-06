@@ -2,14 +2,16 @@ package com.innovation.myblog.models;
 
 
 import com.innovation.myblog.dto.CommentDto;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.LinkedHashMap;
 
-//@TypeDef(name = "json", typeClass = JsonStringType.class)
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 @Getter
 @NoArgsConstructor
 @Entity
