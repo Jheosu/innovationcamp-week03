@@ -1,7 +1,5 @@
 package com.innovation.myblog.dto;
 
-import com.innovation.myblog.models.Comment;
-import com.innovation.myblog.models.Myblog;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,15 +7,13 @@ import lombok.Setter;
 
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ResponseDto {
+    // 원하는 정보만 보여주도록 매핑
+    private List<MyblogResponseMapping> myblogList;
 
-    private List<Myblog> myblogList;
-
-    private List<Comment> commentList ;
-
-
+    //private List<Comment> commentList;
 }
