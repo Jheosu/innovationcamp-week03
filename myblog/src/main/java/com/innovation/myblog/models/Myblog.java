@@ -31,6 +31,9 @@ public class Myblog extends TimeStamped {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String imageUrl;
+
     @Column(nullable = false)
     private String author;
 
@@ -57,12 +60,15 @@ public class Myblog extends TimeStamped {
         this.content = requestDto.getContent();
         this.commentCount = requestDto.getCommentCount();
     }
+
+
     public Myblog(MyblogDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.author = requestDto.getAuthor();
         // nullable = false 이기 때문에 초기화
         this.commentCount = 0;
+        this.imageUrl = requestDto.getImageUrl();
         this.commentIds = new LinkedHashSet<>();
         this.likeCount = 0;
         this.likedMembers = new LinkedHashMap<>();
@@ -104,4 +110,7 @@ public class Myblog extends TimeStamped {
         commentIds.remove(id);
         commentCount = commentIds.size();
     }
+
+
+
 }

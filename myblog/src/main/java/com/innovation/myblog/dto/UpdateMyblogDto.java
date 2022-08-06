@@ -13,6 +13,8 @@ public class UpdateMyblogDto {
 
     private final String content;
 
+    private String ImageUrl;
+
     private final int commentCount;
 
 }
