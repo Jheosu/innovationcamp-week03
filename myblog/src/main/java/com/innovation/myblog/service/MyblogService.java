@@ -108,7 +108,8 @@ public class MyblogService {
     @Transactional
     public Long deletecomment(Long id) {
 
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 댓글이 없습니다"));
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 댓글이 없습니다"));
         if (!Objects.equals(comment.getAuthor(), getAuthor())) {
             throw new IllegalArgumentException("삭제하실 권한이 없습니다");
         }

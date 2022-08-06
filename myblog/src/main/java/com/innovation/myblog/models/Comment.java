@@ -1,6 +1,8 @@
 package com.innovation.myblog.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.innovation.myblog.dto.CommentDto;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;

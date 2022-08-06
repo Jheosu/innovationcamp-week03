@@ -7,18 +7,20 @@ import com.innovation.myblog.models.Myblog;
 import com.innovation.myblog.repository.MyblogRepository;
 import com.innovation.myblog.service.MyblogService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController  // @Bean
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
+@RestController
 public class MyblogController {
 
     private final MyblogRepository myblogRepository;
     private final MyblogService myblogService;
-
 
 
     @GetMapping("") // 전체 조회
