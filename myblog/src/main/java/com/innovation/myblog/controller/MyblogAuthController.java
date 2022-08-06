@@ -38,24 +38,24 @@ public class MyblogAuthController {
     // ------------------댓글--------------------
 
     @PostMapping("/comment")    //댓글 생성
-    public Long postcomments(@RequestBody CommentDto requestDto) {
+    public Comment postcomments(@RequestBody CommentDto requestDto) {
         return myblogService.createcomment(requestDto);
     }
 
     @PutMapping("/comment/{id}") //댓글 수정
-    public Comment updatecomments(@RequestBody CommentDto requstDto, @PathVariable Long id){
-        return myblogService.updatecomment(requstDto,id);
+    public Comment updatecomments(@RequestBody CommentDto requstDto, @PathVariable Long id) {
+        return myblogService.updatecomment(requstDto, id);
 
 
     }
 
     @DeleteMapping("/comment/{id}") //댓글 삭제
-    public Long deletecomment(@PathVariable Long id){
+    public Long deletecomment(@PathVariable Long id) {
         return myblogService.deletecomment(id);
     }
 
 
-    @ExceptionHandler({ IllegalArgumentException.class })
+    @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity handleException(IllegalArgumentException ex) {
         RestApiException restApiException = new RestApiException();
         restApiException.setHttpStatus(HttpStatus.UNAUTHORIZED);
