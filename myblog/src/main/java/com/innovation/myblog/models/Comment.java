@@ -41,7 +41,7 @@ public class Comment extends TimeStamped{
     private Comment parent;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent",cascade = CascadeType.REMOVE)
     private List<Comment> childList = new ArrayList<>();
 
 

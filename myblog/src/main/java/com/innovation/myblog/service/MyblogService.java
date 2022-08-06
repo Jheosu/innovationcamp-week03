@@ -72,9 +72,7 @@ public class MyblogService {
             throw new IllegalArgumentException("삭제하실 권한이 없습니다");
         }
 
-
         myblogRepository.deleteByAuthorAndId(getAuthor(), id);
-
 
         commentRepository.deleteByPostid(id);
 
@@ -85,39 +83,38 @@ public class MyblogService {
     //댓글 생성
     public Long createcomment(CommentDto requestDto) {
         requestDto.setAuthor(getAuthor());
-        Long id = requestDto.getPostid();
 
-        myblogRepository.findById(id).orElseThrow(
+        myblogRepository.findById(requestDto.getPostid()).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물이 없습니다")
         );
 
         Comment comment = new Comment(requestDto);
+
         commentRepository.save(comment);
 
-        return id;
+        return requestDto.getPostid();
     }
 
     //모든 댓글 조회
     public List<Comment> getcomments() {
-        return commentRepository.findByParent(null);
+        return commentRepository.findAllByParentIsNull();
     }
 
+    //대댓글만 조회
     public List<Comment> getrecomments() {
         return commentRepository.findAllByParentIsNotNull();
     }
 
+    //특정 게시물 댓글 조회
     public List<Comment> getidcomments(Long id) {
         return commentRepository.findByPostidAndParent(id,null);
     }
 
-
-
+    //댓글 삭제
     @Transactional
     public Long deletecomment(Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 댓글이 없습니다"));
-
-        commentRepository.deleteAllByParent(comment);
 
         if (!Objects.equals(comment.getAuthor(), getAuthor())) {
             throw new IllegalArgumentException("삭제하실 권한이 없습니다");
@@ -126,20 +123,18 @@ public class MyblogService {
         return id;
     }
 
-    public Long createrecomment(CommentDto requestDto) {
+    // 대댓글 생성
+    public Comment createrecomment(CommentDto requestDto) {
         requestDto.setAuthor(getAuthor());
 
         Comment comment = new Comment(requestDto);
 
-        comment.confirmParent(commentRepository.findById(requestDto.getParentid()).orElseThrow(() -> new RuntimeException("xx")));
+        comment.confirmParent(commentRepository.findById(requestDto.getParentid()).orElseThrow(() -> new RuntimeException("해당하는 부모가 없습니다")));
 
         commentRepository.save(comment);
 
-        return requestDto.getParentid();
+        return comment;
     }
-
-
-
 
     @Transactional
     public Comment updatecomment(CommentDto requestDto, Long id) {
@@ -155,11 +150,15 @@ public class MyblogService {
         return comment;
     }
 
-    public Comment updaterecomment(CommentDto requstDto, Long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("xx"));
-        comment.update(requstDto);
-        return comment;
+    public List<Comment> getparentrecomment(Long parentid) {
+
+        return commentRepository.findByParent(
+                commentRepository.findById(parentid).orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 댓글이 없음")
+                )
+        );
     }
+
     //현재 접근하는 token의 유저name 반환
     private String getAuthor() {
         return memberService.getMyInfo().getNickname();
