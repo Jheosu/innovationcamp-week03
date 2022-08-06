@@ -1,6 +1,7 @@
 package com.innovation.myblog.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import java.util.LinkedHashSet;
 @Table(name = "auth_myblog")
 @Entity
 public class Myblog extends TimeStamped {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -54,6 +56,11 @@ public class Myblog extends TimeStamped {
     @Column(nullable = false)
     @Type(type = "json")
     LinkedHashMap<Long, String> likedMembers;
+
+    @OneToMany(mappedBy = "myblog", cascade = ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
+
+
 
     public void update(UpdateMyblogDto requestDto) {
         this.title = requestDto.getTitle();
@@ -111,6 +118,7 @@ public class Myblog extends TimeStamped {
         commentCount = commentIds.size();
     }
 
-
-
+    public void addCommentlist(Comment comment) {
+        commentList.add(comment);
+    }
 }

@@ -2,6 +2,7 @@ package com.innovation.myblog.models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.innovation.myblog.dto.CommentDto;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
@@ -37,6 +38,11 @@ public class Comment extends TimeStamped {
 
     @Column(nullable = false)
     private Long postid;
+
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "myblog_id")
+    private Myblog myblog;
 
     // 좋아요 개수
     @Column(nullable = false)
@@ -80,6 +86,10 @@ public class Comment extends TimeStamped {
         parent.addChild(this);
     }
 
+    public void confirmPost(Myblog myblog) {
+        this.myblog = myblog;
+        myblog.addCommentlist(this);
+    }
 
 
     // 댓글 좋아요 등록

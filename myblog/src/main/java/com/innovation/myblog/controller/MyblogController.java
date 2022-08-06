@@ -21,7 +21,7 @@ public class MyblogController {
 
 
 
-    @GetMapping("") // 전체 조회
+    @GetMapping("") //  조회
     public ResponseDto getposts() {
         return myblogService.findall();
     }

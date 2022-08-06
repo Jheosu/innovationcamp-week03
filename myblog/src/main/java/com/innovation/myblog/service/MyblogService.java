@@ -97,7 +97,9 @@ public class MyblogService {
             );
 
             // 새 댓글 생성해서 저장하고
-            Comment comment = commentRepository.save(new Comment(requestDto));
+            Comment comment = new Comment(requestDto);
+            comment.confirmPost(myblog);
+            commentRepository.save(comment);
 
             // 저장된 댓글의 comment_id를 myblog에 저장한다.
             myblog.addComment(comment.getId());
