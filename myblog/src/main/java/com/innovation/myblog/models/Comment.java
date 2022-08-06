@@ -9,7 +9,11 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @TypeDef(name = "json", typeClass = JsonStringType.class)
 @Getter
@@ -39,6 +43,16 @@ public class Comment extends TimeStamped {
     @Type(type = "json")
     LinkedHashMap<Long, String> likedMembers;
 
+    @JsonBackReference
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    private List<Comment> childList = new ArrayList<>();
+
+
     public Comment(CommentDto commentDto) {
         this.author = commentDto.getAuthor();
         this.comment = commentDto.getComment();
@@ -51,6 +65,16 @@ public class Comment extends TimeStamped {
     public void update(CommentDto commentDto) {
         this.comment = commentDto.getComment();
     }
+
+    public void addChild(Comment child) {
+        childList.add(child);
+    }
+
+    public void confirmParent(Comment parent) {
+        this.parent = parent;
+        parent.addChild(this);
+    }
+
 
     // 댓글 좋아요 등록
     public void addLikedMember(Long memberId, String author) {

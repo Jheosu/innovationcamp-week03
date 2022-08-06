@@ -74,9 +74,8 @@ public class MyblogService {
     //댓글 생성
     public Comment createcomment(CommentDto requestDto) {
         requestDto.setAuthor(getAuthor());
-        Long id = requestDto.getPostid();
 
-        Myblog myblog = myblogRepository.findById(id).orElseThrow(
+        Myblog myblog = myblogRepository.findById(requestDto.getPostid()).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물이 없습니다")
         );
 
@@ -92,14 +91,21 @@ public class MyblogService {
 
     //모든 댓글 조회
     public List<Comment> getcomments() {
-        return commentRepository.findAllByOrderByCreatedAtDesc();
+        return commentRepository.findAllByParentIsNull();
     }
 
+    //대댓글만 조회
+    public List<Comment> getrecomments() {
+        return commentRepository.findAllByParentIsNotNull();
+    }
 
+    //특정 게시물 댓글 조회
     public List<Comment> getidcomments(Long id) {
-        return commentRepository.findByPostid(id);
+        return commentRepository.findByPostidAndParent(id, null);
     }
 
+    //댓글 삭제
+    @Transactional
     public Long deletecomment(Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 댓글이 없습니다"));
@@ -108,6 +114,19 @@ public class MyblogService {
         }
         commentRepository.deleteById(id);
         return id;
+    }
+
+    // 대댓글 생성
+    public Comment createrecomment(CommentDto requestDto) {
+        requestDto.setAuthor(getAuthor());
+
+        Comment comment = new Comment(requestDto);
+
+        comment.confirmParent(commentRepository.findById(requestDto.getParentid()).orElseThrow(() -> new RuntimeException("해당하는 부모가 없습니다")));
+
+        commentRepository.save(comment);
+
+        return comment;
     }
 
     @Transactional
@@ -122,6 +141,12 @@ public class MyblogService {
         comment.update(requestDto);
 
         return comment;
+    }
+
+    public List<Comment> getparentrecomment(Long parentid) {
+        return commentRepository.findByParent(
+                commentRepository.findById(parentid).orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 댓글이 없음")));
     }
 
     //현재 접근하는 token의 유저name 반환

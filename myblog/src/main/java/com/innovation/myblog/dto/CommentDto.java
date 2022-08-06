@@ -11,6 +11,8 @@ public class CommentDto {
 
     private  Long postid;
 
+    private Long parentid;
+
     private  String comment;
 
     private String author;

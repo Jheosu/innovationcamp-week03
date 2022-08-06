@@ -4,9 +4,14 @@ spring:
       enabled: true
 
   datasource:
-    username: admin
-    url: jdbc:mysql://springboot-database.cn3x5unw9erg.ap-northeast-2.rds.amazonaws.com:3306/myblog
-    password: qweasd8770!
+    #    url: jdbc:h2:mem:testdb
+    #    driver-class-name: org.h2.Driver
+    #    username: sa
+    #    password:
+    url: jdbc:h2:~/local
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     hibernate:

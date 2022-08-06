@@ -38,9 +38,19 @@ public class MyblogController {
         return myblogService.getcomments();
     }
 
+    @GetMapping("/recomment") // 대댓글 조회
+    public List<Comment> getrecomment() {
+        return myblogService.getrecomments();
+    }
+
     @GetMapping("/comment/{id}") // 특정 게시물 댓글 조회
     public List<Comment> getidcomments(@PathVariable Long id) {
         return myblogService.getidcomments(id);
+    }
+
+    @GetMapping("/recomment/{parentid}") //부모 댓글이 parent id인 대댓글 조회
+    public List<Comment> getrecomments(@PathVariable Long parentid) {
+        return myblogService.getparentrecomment(parentid);
     }
 
 }
