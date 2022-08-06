@@ -4,17 +4,18 @@ package com.innovation.myblog.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 public class MyblogDto {
 
-    private final String title;
+    private String title;
 
-    private final String content;
+    private String content;
+
+    private String imageUrl;
 
     private String author;
-
 
 }

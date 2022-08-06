@@ -24,6 +24,9 @@ public class Myblog extends TimeStamped{
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String imageUrl;
+
     @Column(nullable = false)
     private String author;
 
@@ -32,13 +35,13 @@ public class Myblog extends TimeStamped{
     public void update (UpdateMyblogDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+        this.imageUrl = requestDto.getImageUrl();
     }
 
-    public Myblog(MyblogDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
-        this.author = requestDto.getAuthor();
+    public Myblog(MyblogDto myblogDto) {
+        this.title = myblogDto.getTitle();
+        this.content = myblogDto.getContent();
+        this.imageUrl = myblogDto.getImageUrl();
+        this.author = myblogDto.getAuthor();
     }
-
-
 }

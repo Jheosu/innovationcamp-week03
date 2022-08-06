@@ -12,4 +12,6 @@ public class UpdateMyblogDto {
     private final String title;
 
     private final String content;
+
+    private String ImageUrl;
 }

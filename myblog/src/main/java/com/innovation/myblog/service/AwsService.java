@@ -22,14 +22,15 @@ public class AwsService {
 
     private final AmazonS3Client amazonS3Client;
 
+
+
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+    public File uploadFile(MultipartFile multipartFile) throws IOException {
 
-        return upload(uploadFile, dirName);
+        return convert(multipartFile)
+                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
     }
 
     private String upload(File uploadFile, String dirName) {
@@ -62,5 +63,11 @@ public class AwsService {
         }
 
         return Optional.empty();
+    }
+
+    public String saveImageUrl(MultipartFile multipartFile) throws IOException {
+        File file = uploadFile(multipartFile);
+
+        return upload(file, "static");
     }
 }

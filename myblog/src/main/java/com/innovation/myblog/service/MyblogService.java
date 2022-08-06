@@ -11,8 +11,11 @@ import com.innovation.myblog.repository.CommentRepository;
 import com.innovation.myblog.repository.MyblogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,9 +24,9 @@ import java.util.Objects;
 public class MyblogService {
 
     private final MyblogRepository myblogRepository;
-
     private final CommentRepository commentRepository;
     private final MemberService memberService;
+    private final AwsService awsService;
 
 
     public ResponseDto findall() {
@@ -32,34 +35,40 @@ public class MyblogService {
     }
 
 
-    public Myblog createPost(MyblogDto requestDto) {
+    public void createPost(MyblogDto myblogDto, MultipartFile multipartFile) {
 
-        requestDto.setAuthor(getAuthor());
+        try {
+            String url = awsService.saveImageUrl(multipartFile);
+            myblogDto.setImageUrl(url);
+            myblogDto.setAuthor(getAuthor());
+            Myblog myblog = new Myblog(myblogDto);
+            myblogRepository.save(myblog);
 
-        Myblog myblog = new Myblog(requestDto);
-
-        return myblogRepository.save(myblog);
-    }
-
-
-
-    //게시글 수정
-    @Transactional
-    public Long update(Long id, UpdateMyblogDto requestDto) {
-        try{ Myblog myblog = myblogRepository.findByAuthorAndId(getAuthor(),id);
-
-            if(myblog == null) {
-                throw new IllegalArgumentException("권한이없거나 해당 id가 존재하지않습니다");
-            }
-
-            myblog.update(requestDto);
-
-            return id;
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            myblogDto.setAuthor(getAuthor());
+            Myblog myblog = new Myblog(myblogDto);
+            myblogRepository.save(myblog);
         }
 
 
+    }
+
+    //게시글 수정
+    @Transactional
+    public Long update(Long id, UpdateMyblogDto requestDto, MultipartFile multipartFile) {
+        Myblog myblog = myblogRepository.findByAuthorAndId(getAuthor(), id);
+        if (myblog == null) {
+            throw new IllegalArgumentException("권한이없거나 해당 id가 존재하지않습니다");
+        }
+        try {
+            String url = awsService.saveImageUrl(multipartFile);
+            requestDto.setImageUrl(url);
+            myblog.update(requestDto);
+        } catch (Exception e) {
+            myblog.update(requestDto);
+        }
+
+        return id;
     }
 
     //게시글 삭제
