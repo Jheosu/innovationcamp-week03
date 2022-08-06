@@ -2,11 +2,11 @@ package com.innovation.myblog.service;
 
 
 import com.innovation.myblog.dto.CommentDto;
+import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.dto.ResponseDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import com.innovation.myblog.models.Comment;
 import com.innovation.myblog.models.Myblog;
-import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.repository.CommentRepository;
 import com.innovation.myblog.repository.MyblogRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +19,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Service  //@Bean
 public class MyblogService {
-
     private final MyblogRepository myblogRepository;
-
     private final CommentRepository commentRepository;
     private final MemberService memberService;
 
-
     public ResponseDto findall() {
-
-        return new ResponseDto(myblogRepository.findAllByOrderByCreatedAtDesc(), commentRepository.findAll());
+//        return new ResponseDto(myblogRepository.findAllByOrderByCreatedAtDesc(), commentRepository.findAll());
+        // 전체 게시글 목록에서 댓글은 보여주지 않도록 변경 (과제 요구사항)
+        return new ResponseDto(myblogRepository.findAllByOrderByCreatedAtDesc());
     }
-
 
     public Myblog createPost(MyblogDto requestDto) {
 
@@ -58,8 +55,6 @@ public class MyblogService {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     //게시글 삭제
@@ -73,7 +68,6 @@ public class MyblogService {
         }
 
         myblogRepository.deleteByAuthorAndId(getAuthor(), id);
-
         commentRepository.deleteByPostid(id);
 
         return id;
@@ -81,18 +75,21 @@ public class MyblogService {
 
 
     //댓글 생성
-    public Long createcomment(CommentDto requestDto) {
+    public Comment createcomment(CommentDto requestDto) {
         requestDto.setAuthor(getAuthor());
 
-        myblogRepository.findById(requestDto.getPostid()).orElseThrow(
+        Myblog myblog = myblogRepository.findById(requestDto.getPostid()).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물이 없습니다")
         );
 
-        Comment comment = new Comment(requestDto);
+        // 새 댓글 생성해서 저장하고
+        Comment comment = commentRepository.save(new Comment(requestDto));
 
-        commentRepository.save(comment);
+        // 저장된 댓글의 comment_id를 myblog에 저장한다.
+        myblog.addComment(comment.getId());
+        myblogRepository.save(myblog);
 
-        return requestDto.getPostid();
+        return comment;
     }
 
     //모든 댓글 조회

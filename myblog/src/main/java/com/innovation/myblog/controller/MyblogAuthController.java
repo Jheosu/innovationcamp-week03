@@ -38,7 +38,7 @@ public class MyblogAuthController {
     // ------------------댓글--------------------
 
     @PostMapping("/comment")    //댓글 생성
-    public Long postcomments(@RequestBody CommentDto requestDto) {
+    public Comment postcomments(@RequestBody CommentDto requestDto) {
         return myblogService.createcomment(requestDto);
     }
 
