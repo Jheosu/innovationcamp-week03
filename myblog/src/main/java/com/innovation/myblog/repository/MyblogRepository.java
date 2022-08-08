@@ -13,6 +13,7 @@ public interface MyblogRepository extends JpaRepository<Myblog, Long> {
     // 원하는 항목만 보여주도록 매핑
     List<MyblogResponseMapping> findAllByOrderByCreatedAtDesc();
 
+    List<Myblog> findAllByAuthor(String author);
     Myblog findByAuthorAndId(String author, Long id);
     void deleteByAuthorAndId(String author, Long id);
 

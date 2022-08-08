@@ -2,6 +2,7 @@ package com.innovation.myblog.controller;
 
 
 import com.innovation.myblog.dto.CommentDto;
+import com.innovation.myblog.dto.MyResponseDto;
 import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import com.innovation.myblog.exception.RestApiException;
@@ -80,4 +81,13 @@ public class MyblogAuthController {
         );
     }
 
+    @GetMapping("/mypage")  //마이페이지
+    public MyResponseDto mypage() {
+        MyResponseDto mypageList = new MyResponseDto();
+        mypageList.setMyblogList(myblogService.findallmyblog().getBlogList());
+        mypageList.setMycommentList(myblogService.findallmyblog().getCommentList());
+        mypageList.setMylikedblogList(myblogService.findallmylikedblog().getBlogList());
+        mypageList.setMylikedcommentList(myblogService.findallmylikedblog().getCommentList());
+        return mypageList;
+    }
 }

@@ -1,10 +1,7 @@
 package com.innovation.myblog.service;
 
 
-import com.innovation.myblog.dto.CommentDto;
-import com.innovation.myblog.dto.MyblogDto;
-import com.innovation.myblog.dto.ResponseDto;
-import com.innovation.myblog.dto.UpdateMyblogDto;
+import com.innovation.myblog.dto.*;
 import com.innovation.myblog.models.Comment;
 import com.innovation.myblog.models.Myblog;
 import com.innovation.myblog.repository.CommentRepository;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -130,7 +128,6 @@ public class MyblogService {
             if (!Objects.equals(comment.getAuthor(), getAuthor())) {
                 throw new IllegalArgumentException("삭제하실 권한이 없습니다");
             }
-
             commentRepository.deleteById(id);
             return id;
         }
@@ -177,6 +174,34 @@ public class MyblogService {
         }
 
 
+        public BlogCommentDto findallmyblog() {
+            return new BlogCommentDto(myblogRepository.findAllByAuthor(getAuthor()),commentRepository.findAllByAuthor(getAuthor()));
+        }
+        public BlogCommentDto findallmylikedblog() {
+            BlogCommentDto bcDto = new BlogCommentDto();
+
+            Iterator<Long> blog = memberService.getMyInfo().getLikedMyBlogs().iterator();
+            while (blog.hasNext()) {
+                addBloglistbyId(bcDto, blog.next());
+            }
+            Iterator<Long> comment = memberService.getMyInfo().getLikedComments().iterator();
+            while (comment.hasNext()) {
+                addCommentlistbyId(bcDto, comment.next());
+            }
+            //return new BlogCommentDto(memberService.getMyLiked().getBlogList(), memberService.getMyLiked().getCommentList());
+            return bcDto;
+        }
+
+        public void addBloglistbyId(BlogCommentDto blogcommentDto, Long id) {
+            blogcommentDto.addBloglist(myblogRepository.findById(id).orElseThrow(
+                    () -> new IllegalArgumentException("좋아요한 글이 없음")
+            ));
+        }
+        public void addCommentlistbyId(BlogCommentDto blogcommentDto, Long id) {
+            blogcommentDto.addCommentlist(commentRepository.findById(id).orElseThrow(
+                    () -> new IllegalArgumentException("좋아요한 댓글이 없음")
+            ));
+        }
     }
 
 
