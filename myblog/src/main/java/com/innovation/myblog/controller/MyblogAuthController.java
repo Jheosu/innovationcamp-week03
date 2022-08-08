@@ -22,8 +22,6 @@ public class MyblogAuthController {
 
     private final MyblogService myblogService;
 
-    private final AwsService awsService;
-
     @PostMapping("/post") //생성
     public void createPost(@RequestPart(value = "file", required = false) MultipartFile multipartFile,
                            @RequestPart(value = "request") MyblogDto requestDto) {
