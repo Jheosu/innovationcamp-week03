@@ -1,9 +1,7 @@
 package com.innovation.myblog.models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.innovation.myblog.dto.CommentDto;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
@@ -39,6 +37,7 @@ public class Comment extends TimeStamped {
     @Column(nullable = false)
     private Long postid;
 
+    // Comment N : Myblog 1
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "myblog_id")
@@ -53,12 +52,11 @@ public class Comment extends TimeStamped {
     @Type(type = "json")
     LinkedHashMap<Long, String> likedMembers;
 
-    @JsonBackReference
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "parent",cascade = CascadeType.REMOVE)
     private List<Comment> childList = new ArrayList<>();
 

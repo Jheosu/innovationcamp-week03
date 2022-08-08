@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -132,6 +130,7 @@ public class MyblogService {
             if (!Objects.equals(comment.getAuthor(), getAuthor())) {
                 throw new IllegalArgumentException("삭제하실 권한이 없습니다");
             }
+
             commentRepository.deleteById(id);
             return id;
         }
@@ -142,8 +141,8 @@ public class MyblogService {
 
             Comment comment = new Comment(requestDto);
 
-            comment.confirmParent(commentRepository.findById(requestDto.getParentid()).orElseThrow(() -> new RuntimeException("해당하는 부모가 없습니다")));
-
+            comment.confirmPost(myblogRepository.findById(requestDto.getPostid()).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다")));
+            comment.confirmParent(commentRepository.findById(requestDto.getParentid()).orElseThrow(() -> new IllegalArgumentException("해당하는 부모가 없습니다")));
             commentRepository.save(comment);
 
             return comment;

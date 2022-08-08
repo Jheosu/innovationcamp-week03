@@ -57,6 +57,7 @@ public class Myblog extends TimeStamped {
     @Type(type = "json")
     LinkedHashMap<Long, String> likedMembers;
 
+    // Myblog 1 : Comment N
     @OneToMany(mappedBy = "myblog", cascade = ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 

@@ -1,6 +1,6 @@
 package com.innovation.myblog.dto;
 
-import com.innovation.myblog.models.Comment;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CommentDto {
 
     private  Long postid;
