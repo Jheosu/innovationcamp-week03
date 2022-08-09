@@ -5,7 +5,7 @@ import com.innovation.myblog.models.Comment;
 
 import java.time.LocalDateTime;
 
-@JsonPropertyOrder({"postid", "id", "parent", "author", "likeCount",
+@JsonPropertyOrder({"postid", "id", "parent", "author","comment", "likeCount",
         "createdAt", "modifiedAt"})
 public interface CommentResponseMapping {
     Long getId();
@@ -15,6 +15,8 @@ public interface CommentResponseMapping {
     //Comment getParent();
 
     String getAuthor();
+
+    String getComment();
 
     String getLikeCount();
 
