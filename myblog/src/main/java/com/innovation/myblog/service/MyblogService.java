@@ -39,6 +39,7 @@ public class MyblogService {
             Myblog myblog = new Myblog(myblogDto);
             myblogRepository.save(myblog);
 
+
         } catch (Exception e) {
             myblogDto.setAuthor(getAuthor());
             Myblog myblog = new Myblog(myblogDto);
