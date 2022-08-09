@@ -1,8 +1,7 @@
 package com.innovation.myblog.models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.innovation.myblog.dto.CommentDto;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
@@ -11,8 +10,8 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
@@ -36,6 +35,12 @@ public class Comment extends TimeStamped {
     @Column(nullable = false)
     private Long postid;
 
+    // Comment N : Myblog 1
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "myblog_id")
+    private Myblog myblog;
+
     // 좋아요 개수
     @Column(nullable = false)
     private int likeCount;
@@ -45,13 +50,12 @@ public class Comment extends TimeStamped {
     @Type(type = "json")
     LinkedHashMap<Long, String> likedMembers;
 
-    @JsonBackReference
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "parent",cascade = CascadeType.REMOVE)
     private List<Comment> childList = new ArrayList<>();
 
 
@@ -77,6 +81,10 @@ public class Comment extends TimeStamped {
         parent.addChild(this);
     }
 
+    public void confirmPost(Myblog myblog) {
+        this.myblog = myblog;
+        myblog.addCommentlist(this);
+    }
 
     // 댓글 좋아요 등록
     public void addLikedMember(Long memberId, String author) {

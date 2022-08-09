@@ -1,27 +1,32 @@
 package com.innovation.myblog.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
+import com.innovation.myblog.Config.AwsConfig;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+@Service
+@Getter
 public class AwsService {
 
     private final AmazonS3Client amazonS3Client;
-
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
@@ -32,8 +37,8 @@ public class AwsService {
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
     }
 
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
+    private String upload(File uploadFile) {
+        String fileName = "static/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -42,6 +47,13 @@ public class AwsService {
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
+
+
+    }
+
+    public void deleteS3(String fileName) {
+        DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+        amazonS3Client.deleteObject(request);
     }
 
     private void removeNewFile(File targetFile) {
@@ -66,7 +78,15 @@ public class AwsService {
 
     public String saveImageUrl(MultipartFile multipartFile) throws IOException {
         File file = uploadFile(multipartFile);
+        return upload(file);
+    }
 
-        return upload(file, "static");
+    public List<String> S3FileList() {
+        ObjectListing objectListing = amazonS3Client.listObjects(bucket);
+        List<String> list = new ArrayList<>();
+        for(int i=0; i<objectListing.getObjectSummaries().size(); i++) {
+            list.add(objectListing.getObjectSummaries().get(i).getKey());
+        }
+        return list;
     }
 }

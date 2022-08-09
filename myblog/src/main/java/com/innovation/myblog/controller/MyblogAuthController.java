@@ -2,11 +2,11 @@ package com.innovation.myblog.controller;
 
 
 import com.innovation.myblog.dto.CommentDto;
+import com.innovation.myblog.dto.MyResponseDto;
 import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import com.innovation.myblog.exception.RestApiException;
 import com.innovation.myblog.models.Comment;
-import com.innovation.myblog.service.AwsService;
 import com.innovation.myblog.service.MyblogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class MyblogAuthController {
 
     private final MyblogService myblogService;
-
-    private final AwsService awsService;
 
     @PostMapping("/post") //생성
     public void createPost(@RequestPart(value = "file", required = false) MultipartFile multipartFile,
@@ -68,11 +66,11 @@ public class MyblogAuthController {
     }
 
     @ExceptionHandler({ IllegalArgumentException.class })
-    public ResponseEntity handleException(IllegalArgumentException ex) {
+    public ResponseEntity<RestApiException> handleException(IllegalArgumentException ex) {
         RestApiException restApiException = new RestApiException();
         restApiException.setHttpStatus(HttpStatus.UNAUTHORIZED);
         restApiException.setErrorMessage(ex.getMessage());
-        return new ResponseEntity(
+        return new ResponseEntity<>(
                 // HTTP body
                 restApiException,
                 // HTTP status code
@@ -80,4 +78,13 @@ public class MyblogAuthController {
         );
     }
 
+    @GetMapping("/mypage")  //마이페이지
+    public MyResponseDto mypage() {
+        MyResponseDto mypageList = new MyResponseDto();
+        mypageList.setMyblogList(myblogService.findallmyblog().getBlogList());
+        mypageList.setMycommentList(myblogService.findallmyblog().getCommentList());
+        mypageList.setMylikedblogList(myblogService.findallmylikedblog().getBlogList());
+        mypageList.setMylikedcommentList(myblogService.findallmylikedblog().getCommentList());
+        return mypageList;
+    }
 }
