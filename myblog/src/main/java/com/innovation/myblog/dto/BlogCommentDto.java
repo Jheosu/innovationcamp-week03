@@ -16,22 +16,22 @@ import java.util.Optional;
 //@AllArgsConstructor
 public class BlogCommentDto {
 
-    private List<Myblog> blogList;
-    private List<Comment> commentList;
+    private List<MyblogResponseMapping> blogList;
+    private List<CommentResponseMapping> commentList;
 
-    public BlogCommentDto(List<Myblog> blogs, List<Comment> comments) {
+    public BlogCommentDto(List<MyblogResponseMapping> blogs, List<CommentResponseMapping> comments) {
         this.blogList = blogs;
         this.commentList = comments;
     }
 
-    public void addBloglist(Myblog blog) {
+    public void addBloglist(MyblogResponseMapping blog) {
         if (this.blogList == null) {
             this.blogList =  new ArrayList<>();
         }
         this.blogList.add(blog);
     }
 
-    public void addCommentlist(Comment comment) {
+    public void addCommentlist(CommentResponseMapping comment) {
         if (this.commentList == null) {
             this.commentList =  new ArrayList<>();
         }

@@ -12,7 +12,7 @@ public interface CommentResponseMapping {
 
     Long getPostid();
 
-    Comment getParent();
+    //Comment getParent();
 
     String getAuthor();
 

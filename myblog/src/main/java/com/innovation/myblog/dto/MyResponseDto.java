@@ -15,11 +15,11 @@ import java.util.List;
 @AllArgsConstructor
 public class MyResponseDto {
 
-    private List<Myblog> myblogList;
+    private List<MyblogResponseMapping> myblogList;
 
-    private List<Comment> mycommentList;
+    private List<CommentResponseMapping> mycommentList;
 
-    private List<Myblog> mylikedblogList;
+    private List<MyblogResponseMapping> mylikedblogList;
 
-    private List<Comment> mylikedcommentList ;
+    private List<CommentResponseMapping> mylikedcommentList ;
 }
