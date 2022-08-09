@@ -1,7 +1,6 @@
 package com.innovation.myblog.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.innovation.myblog.dto.MyblogDto;
 import com.innovation.myblog.dto.UpdateMyblogDto;
 import lombok.Getter;
@@ -10,12 +9,11 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 
 @NoArgsConstructor
 @Getter
@@ -62,7 +60,6 @@ public class Myblog extends TimeStamped {
     private List<Comment> commentList = new ArrayList<>();
 
 
-
     public void update(UpdateMyblogDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
@@ -82,7 +79,7 @@ public class Myblog extends TimeStamped {
     }
 
     // 좋아요 등록
-    public void addLikedMember(Long id, String author) {
+    public void addLikedMember(Long id, String author) throws IllegalArgumentException {
         if (likedMembers.containsKey(id)) {
             throw new IllegalArgumentException("이미 좋아요를 누른 게시물입니다.");
         }
@@ -91,7 +88,7 @@ public class Myblog extends TimeStamped {
     }
 
     // 좋아요 취소
-    public void removeLikedMember(Long id) {
+    public void removeLikedMember(Long id) throws IllegalArgumentException {
         if (!likedMembers.containsKey(id)) {
             throw new IllegalArgumentException("좋아요를 누른 적 없는 게시물입니다.");
         }
@@ -101,7 +98,7 @@ public class Myblog extends TimeStamped {
     }
 
     // 댓글 등록
-    public void addComment(Long id) {
+    public void addComment(Long id) throws IllegalArgumentException {
         if (commentIds.contains(id)) {
             throw new IllegalArgumentException("이미 등록된 댓글입니다.");
         }
@@ -110,7 +107,7 @@ public class Myblog extends TimeStamped {
     }
 
     // 댓글 취소
-    public void removeComment(Long id) {
+    public void removeComment(Long id) throws IllegalArgumentException {
         if (!commentIds.contains(id)) {
             throw new IllegalArgumentException("작성한 적 없는 댓글입니다.");
         }

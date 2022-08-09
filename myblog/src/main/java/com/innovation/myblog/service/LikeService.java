@@ -11,6 +11,7 @@ import com.innovation.myblog.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.HttpSessionRequiredException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,12 +23,24 @@ public class LikeService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
 
-    public Object like(TargetType type, Long typeId, String param) {
-        boolean like = param.equals("like");
+    public Object like(TargetType type, Long typeId, String param) throws IllegalArgumentException, HttpSessionRequiredException {
+        String likeParam = param.toUpperCase();
+        boolean like = false;
+
+        switch (likeParam) {
+            case "LIKE":
+                like = true;
+                break;
+            case "DISLIKE":
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "like param은 'like', 'dislike' 중 하나여야 합니다.");
+        }
+
         Long memberId = SecurityUtil.getCurrentMemberId();
         Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new IllegalArgumentException("해당 id로 " +
-                        "사용자를 찾을 수 없습니다."));
+                () -> new HttpSessionRequiredException("로그인이 필요합니다"));
 
         // 게시글(MyBlog) 혹은 댓글(Comment)에 좋아요 추가 후 db에 저장.
         // 좋아요를 누른 사용자에도 대상 게시물, 혹은 댓글의 id 저장.
@@ -59,12 +72,12 @@ public class LikeService {
                 return commentRepository.save(comment);
 
             case POST:
-                Myblog post = myblogRepository.findById(typeId).orElseThrow(
+                Myblog myblog = myblogRepository.findById(typeId).orElseThrow(
                         () -> new IllegalArgumentException("해당 id로 " +
                                 "게시글을 찾을 수 없습니다."));
                 if (like) {
                     try {
-                        post.addLikedMember(memberId,
+                        myblog.addLikedMember(memberId,
                                 memberService.getMyInfo().getNickname());
                     } catch (IllegalArgumentException e) {
                         log.error(e.getMessage());
@@ -73,7 +86,7 @@ public class LikeService {
                     member.addLikedMyBlogs(typeId);
                 } else {
                     try {
-                        post.removeLikedMember(memberId);
+                        myblog.removeLikedMember(memberId);
                     } catch (IllegalArgumentException e) {
                         log.error(e.getMessage());
                         return null;
@@ -81,7 +94,7 @@ public class LikeService {
                     member.removeLikedMyBlogs(typeId);
                 }
                 memberRepository.save(member);
-                return myblogRepository.save(post);
+                return myblogRepository.save(myblog);
         }
         return null;
     }
