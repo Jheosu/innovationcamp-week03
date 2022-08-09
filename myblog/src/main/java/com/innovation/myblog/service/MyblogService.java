@@ -41,9 +41,7 @@ public class MyblogService {
 
 
         } catch (Exception e) {
-            myblogDto.setAuthor(getAuthor());
-            Myblog myblog = new Myblog(myblogDto);
-            myblogRepository.save(myblog);
+            throw new IllegalArgumentException("사진이 없습니다");
         }
     }
 

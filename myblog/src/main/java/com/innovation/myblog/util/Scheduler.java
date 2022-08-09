@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,17 @@ public class Scheduler {
     private final MyblogRepository myblogRepository;
     private final AwsService awsService;
 
+
+
+    // 초, 분, 시, 일, 월, 주 순서
+    @Scheduled(cron = "0 0 1 * * *")
+    @Transactional
+    public void deletepost() throws InterruptedException {
+
+        myblogRepository.deleteByCommentCount(0);
+        log.info("게시글이 삭제 되었습니다");
+
+    }
     //사용되지 않는 사진을 S3에서 삭제하는 스케쥴러
     @Scheduled(cron = "0 0 1 * * *") // 초, 분, 시, 일, 월, 주 순서
     public void deleteS3File() {
