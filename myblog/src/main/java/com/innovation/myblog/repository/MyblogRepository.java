@@ -12,8 +12,9 @@ public interface MyblogRepository extends JpaRepository<Myblog, Long> {
     //List <Myblog> findAllByOrderByCreatedAtDesc();
     // 원하는 항목만 보여주도록 매핑
     List<MyblogResponseMapping> findAllByOrderByCreatedAtDesc();
+    MyblogResponseMapping findOneById(Long id);
 
-    List<Myblog> findAllByAuthor(String author);
+    List<MyblogResponseMapping> findAllByAuthor(String author);
     Myblog findByAuthorAndId(String author, Long id);
     void deleteByAuthorAndId(String author, Long id);
 

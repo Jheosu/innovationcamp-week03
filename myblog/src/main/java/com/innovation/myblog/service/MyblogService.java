@@ -176,9 +176,12 @@ public class MyblogService {
         }
 
 
+        //내가 쓴 글, 댓글 조회
         public BlogCommentDto findallmyblog() {
             return new BlogCommentDto(myblogRepository.findAllByAuthor(getAuthor()),commentRepository.findAllByAuthor(getAuthor()));
         }
+
+        //내가 좋아요한 글, 댓글 조회
         public BlogCommentDto findallmylikedblog() {
             BlogCommentDto bcDto = new BlogCommentDto();
 
@@ -195,14 +198,10 @@ public class MyblogService {
         }
 
         public void addBloglistbyId(BlogCommentDto blogcommentDto, Long id) {
-            blogcommentDto.addBloglist(myblogRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("좋아요한 글이 없음")
-            ));
+            blogcommentDto.addBloglist((MyblogResponseMapping) myblogRepository.findOneById(id));
         }
         public void addCommentlistbyId(BlogCommentDto blogcommentDto, Long id) {
-            blogcommentDto.addCommentlist(commentRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("좋아요한 댓글이 없음")
-            ));
+            blogcommentDto.addCommentlist((CommentResponseMapping) commentRepository.findOneById(id));
         }
     }
 
