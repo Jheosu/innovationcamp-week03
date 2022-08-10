@@ -26,3 +26,16 @@ logging:
     com.tutorial: debug
 jwt:
   secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
+
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAVJBN6YUAYLMTFASC
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: spartakdy
